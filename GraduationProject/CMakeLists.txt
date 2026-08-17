@@ -29,6 +29,11 @@ qt_add_qml_module(appMediaPlayerIVI
          HomePage.qml
          RESOURCES icons.qrc
          RESOURCES audio.qrc
+         QML_FILES SplashScreen.qml
+         SOURCES radiostationmodel.h radiostationmodel.cpp
+         SOURCES mediabackend.h mediabackend.cpp
+         QML_FILES MediaButton.qml
+
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
@@ -54,4 +59,5 @@ install(TARGETS appMediaPlayerIVI
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
+
 

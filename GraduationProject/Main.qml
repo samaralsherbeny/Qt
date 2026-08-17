@@ -6,23 +6,27 @@ ApplicationWindow {
 
     width: 1280
     height: 720
+
     visible: true
 
     title: "Media Player IVI"
-    color: "#10141C"
+
+    color: "#0D121B"
+
 
     StackView {
         id: stackView
 
         anchors.fill: parent
 
-        initialItem: homePage
+        initialItem: splashScreen
     }
 
-    Component {
-        id: homePage
 
-        HomePage {
+    Component {
+        id: splashScreen
+
+        SplashScreen {
             stack: stackView
         }
     }

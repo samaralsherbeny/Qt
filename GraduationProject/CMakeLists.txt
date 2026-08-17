@@ -27,6 +27,8 @@ qt_add_qml_module(appMediaPlayerIVI
          UsbPage.qml
          BluetoothPage.qml
          HomePage.qml
+         RESOURCES icons.qrc
+         RESOURCES audio.qrc
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
@@ -52,3 +54,4 @@ install(TARGETS appMediaPlayerIVI
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
+

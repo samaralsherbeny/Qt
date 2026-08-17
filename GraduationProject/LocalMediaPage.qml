@@ -10,7 +10,7 @@ Page {
     property StackView stack
 
     // =========================================================
-    // PLAYLIST MODEL
+    // PLAYLIST
     // =========================================================
 
     ListModel {
@@ -18,36 +18,28 @@ Page {
     }
 
     // =========================================================
-    // MEDIA PLAYER
-    // =========================================================
-
-    MediaPlayer {
-        id: mediaPlayer
-
-        audioOutput: AudioOutput {
-            id: audioOutput
-            volume: volumeSlider.value
-        }
-
-        videoOutput: videoOutput
-    }
-
-    // =========================================================
     // FUNCTIONS
     // =========================================================
 
     function formatTime(milliseconds) {
+
         if (milliseconds <= 0)
             return "00:00"
 
-        var totalSeconds = Math.floor(milliseconds / 1000)
+        var totalSeconds =
+            Math.floor(milliseconds / 1000)
 
-        var minutes = Math.floor(totalSeconds / 60)
-        var seconds = totalSeconds % 60
+        var minutes =
+            Math.floor(totalSeconds / 60)
 
-        return (minutes < 10 ? "0" : "") + minutes
+        var seconds =
+            totalSeconds % 60
+
+        return (minutes < 10 ? "0" : "")
+                + minutes
                 + ":"
-                + (seconds < 10 ? "0" : "") + seconds
+                + (seconds < 10 ? "0" : "")
+                + seconds
     }
 
     function playCurrentItem() {
@@ -56,13 +48,19 @@ Page {
             playlistView.currentIndex >= playlistModel.count)
             return
 
-        var item = playlistModel.get(playlistView.currentIndex)
+        var item =
+            playlistModel.get(
+                playlistView.currentIndex
+            )
 
-        mediaPlayer.source = item.fileUrl
+        mediaBackend.setSource(
+            item.fileUrl
+        )
 
-        currentMediaLabel.text = item.fileName
+        currentMediaLabel.text =
+            item.fileName
 
-        mediaPlayer.play()
+        mediaBackend.play()
     }
 
     // =========================================================
@@ -74,7 +72,8 @@ Page {
 
         title: "Select Media Files"
 
-        fileMode: FileDialog.OpenFiles
+        fileMode:
+            FileDialog.OpenFiles
 
         nameFilters: [
             "Media files (*.mp3 *.wav *.ogg *.mp4 *.mkv *.avi)",
@@ -84,26 +83,37 @@ Page {
 
         onAccepted: {
 
-            for (var i = 0; i < selectedFiles.length; i++) {
+            for (
+                var i = 0;
+                i < selectedFiles.length;
+                i++
+            ) {
 
-                var file = selectedFiles[i]
+                var file =
+                    selectedFiles[i]
 
                 playlistModel.append({
-                    "fileName": file.toString().split("/").pop(),
-                    "fileUrl": file
+                    "fileName":
+                        file.toString()
+                        .split("/")
+                        .pop(),
+
+                    "fileUrl":
+                        file
                 })
             }
 
-            if (playlistModel.count > 0 &&
-                playlistView.currentIndex < 0) {
-
+            if (
+                playlistModel.count > 0 &&
+                playlistView.currentIndex < 0
+            ) {
                 playlistView.currentIndex = 0
             }
         }
     }
 
     // =========================================================
-    // PAGE BACKGROUND
+    // BACKGROUND
     // =========================================================
 
     background: Rectangle {
@@ -130,9 +140,8 @@ Page {
             Layout.fillWidth: true
             Layout.preferredHeight: 55
 
-            // Back button
-
             Button {
+
                 text: "←  Back"
 
                 Layout.preferredWidth: 110
@@ -145,24 +154,31 @@ Page {
                 }
 
                 background: Rectangle {
+
                     radius: 10
-                    color: parent.pressed
-                           ? "#394354"
-                           : "#202938"
+
+                    color:
+                        parent.pressed
+                        ? "#394354"
+                        : "#202938"
 
                     border.color: "#4A5568"
                     border.width: 1
                 }
 
                 contentItem: Text {
+
                     text: parent.text
 
                     color: "white"
 
                     font.pixelSize: 16
 
-                    horizontalAlignment: Text.AlignHCenter
-                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment:
+                        Text.AlignHCenter
+
+                    verticalAlignment:
+                        Text.AlignVCenter
                 }
             }
 
@@ -179,14 +195,13 @@ Page {
                 font.pixelSize: 30
                 font.bold: true
 
-                Layout.alignment: Qt.AlignCenter
+                Layout.alignment:
+                    Qt.AlignCenter
             }
 
             Item {
                 Layout.fillWidth: true
             }
-
-            // Invisible item to keep title centered
 
             Item {
                 Layout.preferredWidth: 110
@@ -194,7 +209,7 @@ Page {
         }
 
         // =====================================================
-        // MEDIA DISPLAY AREA
+        // MEDIA DISPLAY
         // =====================================================
 
         Rectangle {
@@ -209,19 +224,24 @@ Page {
             border.color: "#2C3748"
             border.width: 1
 
-            // Video output
-
             VideoOutput {
+
                 id: videoOutput
 
                 anchors.fill: parent
 
                 anchors.margins: 2
 
-                visible: mediaPlayer.hasVideo
-            }
+                visible:
+                    mediaBackend.hasVideo
 
-            // Shown when there is no video
+                Component.onCompleted: {
+
+                    mediaBackend.setVideoSink(
+                        videoOutput.videoSink
+                    )
+                }
+            }
 
             Column {
 
@@ -229,28 +249,34 @@ Page {
 
                 spacing: 12
 
-                visible: !mediaPlayer.hasVideo
+                visible:
+                    !mediaBackend.hasVideo
 
                 Label {
+
                     text: "♫"
 
                     color: "#C957D9"
 
                     font.pixelSize: 60
 
-                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.horizontalCenter:
+                        parent.horizontalCenter
                 }
 
                 Label {
-                    text: mediaPlayer.source === ""
-                          ? "No media playing"
-                          : "Now Playing"
+
+                    text:
+                        mediaBackend.currentFileName === ""
+                        ? "No media playing"
+                        : "Now Playing"
 
                     color: "#AEB7C5"
 
                     font.pixelSize: 20
 
-                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.horizontalCenter:
+                        parent.horizontalCenter
                 }
             }
         }
@@ -272,9 +298,11 @@ Page {
 
             Layout.fillWidth: true
 
-            horizontalAlignment: Text.AlignHCenter
+            horizontalAlignment:
+                Text.AlignHCenter
 
-            elide: Text.ElideMiddle
+            elide:
+                Text.ElideMiddle
         }
 
         // =====================================================
@@ -289,7 +317,7 @@ Page {
             spacing: 18
 
             // =================================================
-            // PLAYLIST PANEL
+            // PLAYLIST
             // =================================================
 
             Rectangle {
@@ -338,13 +366,15 @@ Page {
                                 fileDialog.open()
                             }
 
-                            background: Rectangle {
+                            background:
+                                Rectangle {
 
                                 radius: 8
 
-                                color: parent.pressed
-                                       ? "#A73BB8"
-                                       : "#C957D9"
+                                color:
+                                    parent.pressed
+                                    ? "#A73BB8"
+                                    : "#C957D9"
                             }
 
                             contentItem: Text {
@@ -364,7 +394,9 @@ Page {
                         }
                     }
 
-                    // Playlist
+                    // =========================================
+                    // PLAYLIST VIEW
+                    // =========================================
 
                     Rectangle {
 
@@ -383,7 +415,8 @@ Page {
 
                             anchors.margins: 6
 
-                            model: playlistModel
+                            model:
+                                playlistModel
 
                             clip: true
 
@@ -391,14 +424,17 @@ Page {
 
                             delegate: Rectangle {
 
-                                width: playlistView.width
+                                width:
+                                    playlistView.width
+
                                 height: 48
 
                                 radius: 8
 
-                                color: ListView.isCurrentItem
-                                       ? "#3A2342"
-                                       : "#18202B"
+                                color:
+                                    ListView.isCurrentItem
+                                    ? "#3A2342"
+                                    : "#18202B"
 
                                 border.color:
                                     ListView.isCurrentItem
@@ -407,29 +443,37 @@ Page {
 
                                 Text {
 
-                                    anchors.left: parent.left
+                                    anchors.left:
+                                        parent.left
+
                                     anchors.leftMargin: 15
 
-                                    anchors.right: parent.right
+                                    anchors.right:
+                                        parent.right
+
                                     anchors.rightMargin: 10
 
                                     anchors.verticalCenter:
                                         parent.verticalCenter
 
-                                    text: fileName
+                                    text:
+                                        fileName
 
-                                    color: ListView.isCurrentItem
-                                           ? "#FFFFFF"
-                                           : "#C4CBD5"
+                                    color:
+                                        ListView.isCurrentItem
+                                        ? "#FFFFFF"
+                                        : "#C4CBD5"
 
                                     font.pixelSize: 15
 
-                                    elide: Text.ElideMiddle
+                                    elide:
+                                        Text.ElideMiddle
                                 }
 
                                 MouseArea {
 
-                                    anchors.fill: parent
+                                    anchors.fill:
+                                        parent
 
                                     onClicked: {
 
@@ -443,14 +487,17 @@ Page {
 
                             Label {
 
-                                anchors.centerIn: parent
+                                anchors.centerIn:
+                                    parent
 
                                 visible:
                                     playlistModel.count === 0
 
-                                text: "No media loaded"
+                                text:
+                                    "No media loaded"
 
-                                color: "#697586"
+                                color:
+                                    "#697586"
 
                                 font.pixelSize: 16
                             }
@@ -460,7 +507,7 @@ Page {
             }
 
             // =================================================
-            // VOLUME PANEL
+            // VOLUME
             // =================================================
 
             Rectangle {
@@ -511,19 +558,27 @@ Page {
                         from: 0
                         to: 1
 
-                        value: 0.8
+                        value:
+                            mediaBackend.volume
 
                         width: 140
 
                         anchors.horizontalCenter:
                             parent.horizontalCenter
+
+                        onMoved: {
+
+                            mediaBackend.volume =
+                                value
+                        }
                     }
 
                     Label {
 
-                        text: Math.round(
-                                  volumeSlider.value * 100
-                                  ) + "%"
+                        text:
+                            Math.round(
+                                volumeSlider.value * 100
+                            ) + "%"
 
                         color: "#C957D9"
 
@@ -537,7 +592,7 @@ Page {
         }
 
         // =====================================================
-        // PROGRESS BAR
+        // PROGRESS
         // =====================================================
 
         RowLayout {
@@ -548,7 +603,10 @@ Page {
 
             Label {
 
-                text: formatTime(mediaPlayer.position)
+                text:
+                    formatTime(
+                        mediaBackend.position
+                    )
 
                 color: "#AEB7C5"
 
@@ -563,20 +621,28 @@ Page {
 
                 from: 0
 
-                to: mediaPlayer.duration > 0
-                    ? mediaPlayer.duration
+                to:
+                    mediaBackend.duration > 0
+                    ? mediaBackend.duration
                     : 1
 
-                value: mediaPlayer.position
+                value:
+                    mediaBackend.position
 
                 onMoved: {
-                    mediaPlayer.setPosition(value)
+
+                    mediaBackend.setPosition(
+                        value
+                    )
                 }
             }
 
             Label {
 
-                text: formatTime(mediaPlayer.duration)
+                text:
+                    formatTime(
+                        mediaBackend.duration
+                    )
 
                 color: "#AEB7C5"
 
@@ -589,200 +655,122 @@ Page {
         // =====================================================
 
         Row {
-            id: playbackControls
 
-            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.horizontalCenter:
+                parent.horizontalCenter
 
-            // Dynamic spacing based on the available width
-            spacing: Math.max(20, Math.min(parent.width * 0.025, 45))
+            spacing:
+                Math.max(
+                    20,
+                    Math.min(
+                        parent.width * 0.025,
+                        45
+                    )
+                )
 
+            // =================================================
             // PREVIOUS
-            Button {
-                id: previousButton
+            // =================================================
 
-                width: 64
-                height: 64
+            MediaButton {
+
+                iconSource:
+                    "qrc:/icons/prev.png"
+
+                buttonSize: 64
+                iconSize: 38
 
                 onClicked: {
-                    if (playlistView.currentIndex > 0) {
+
+                    if (
+                        playlistView.currentIndex > 0
+                    ) {
+
                         playlistView.currentIndex--
+
                         playCurrentItem()
                     }
                 }
-
-                background: Rectangle {
-                    anchors.fill: parent
-
-                    radius: width / 2
-
-                    color: previousButton.pressed
-                           ? "#303B4D"
-                           : "#202938"
-
-                    border.color: "#46536A"
-                    border.width: 1
-                }
-
-                contentItem: Image {
-                    anchors.centerIn: parent
-
-                    width: 38
-                    height: 38
-
-                    source: "qrc:/icons/prev.png"
-
-                    fillMode: Image.PreserveAspectFit
-                    smooth: true
-                }
             }
 
-
+            // =================================================
             // PLAY / PAUSE
-            Button {
-                id: playButton
+            // =================================================
 
-                width: 72
-                height: 72
+            MediaButton {
 
-                anchors.verticalCenter: previousButton.verticalCenter
+                iconSource:
+                    mediaBackend.playing
+                    ? "qrc:/icons/pause.png"
+                    : "qrc:/icons/play.png"
+
+                buttonSize: 72
+                iconSize: 40
+
+                anchors.verticalCenter:
+                    parent.children[0].verticalCenter
 
                 onClicked: {
-                    if (mediaPlayer.playbackState === MediaPlayer.PlayingState) {
-                        mediaPlayer.pause()
+
+                    if (mediaBackend.playing) {
+
+                        mediaBackend.pause()
+
                     } else {
-                        mediaPlayer.play()
+
+                        mediaBackend.play()
                     }
                 }
-
-                background: Rectangle {
-                    anchors.fill: parent
-
-                    radius: width / 2
-
-                    color: playButton.pressed
-                           ? "#303B4D"
-                           : "#202938"
-
-                    border.color: "#46536A"
-                    border.width: 1
-                }
-
-                contentItem: Image {
-                    anchors.centerIn: parent
-
-                    width: 40
-                    height: 40
-
-                    source: mediaPlayer.playbackState === MediaPlayer.PlayingState
-                            ? "qrc:/icons/pause.png"
-                            : "qrc:/icons/play.png"
-
-                    fillMode: Image.PreserveAspectFit
-                    smooth: true
-                }
             }
 
-
+            // =================================================
             // STOP
-            Button {
-                id: stopButton
+            // =================================================
 
-                width: 64
-                height: 64
+            MediaButton {
 
-                anchors.verticalCenter: previousButton.verticalCenter
+                iconSource:
+                    "qrc:/icons/stop.png"
+
+                buttonSize: 64
+                iconSize: 36
+
+                anchors.verticalCenter:
+                    parent.children[0].verticalCenter
 
                 onClicked: {
-                    mediaPlayer.stop()
-                }
 
-                background: Rectangle {
-                    anchors.fill: parent
-
-                    radius: width / 2
-
-                    color: stopButton.pressed
-                           ? "#303B4D"
-                           : "#202938"
-
-                    border.color: "#46536A"
-                    border.width: 1
-                }
-
-                contentItem: Image {
-                    anchors.centerIn: parent
-
-                    width: 36
-                    height: 36
-
-                    source: "qrc:/icons/stop.png"
-
-                    fillMode: Image.PreserveAspectFit
-                    smooth: true
+                    mediaBackend.stop()
                 }
             }
 
-
+            // =================================================
             // NEXT
-            Button {
-                id: nextButton
+            // =================================================
 
-                width: 64
-                height: 64
+            MediaButton {
 
-                anchors.verticalCenter: previousButton.verticalCenter
+                iconSource:
+                    "qrc:/icons/next.png"
+
+                buttonSize: 64
+                iconSize: 38
+
+                anchors.verticalCenter:
+                    parent.children[0].verticalCenter
 
                 onClicked: {
-                    if (playlistView.currentIndex <
-                            playlistModel.count - 1) {
+
+                    if (
+                        playlistView.currentIndex <
+                        playlistModel.count - 1
+                    ) {
 
                         playlistView.currentIndex++
+
                         playCurrentItem()
                     }
                 }
-
-                background: Rectangle {
-                    anchors.fill: parent
-
-                    radius: width / 2
-
-                    color: nextButton.pressed
-                           ? "#303B4D"
-                           : "#202938"
-
-                    border.color: "#46536A"
-                    border.width: 1
-                }
-
-                contentItem: Image {
-                    anchors.centerIn: parent
-
-                    width: 38
-                    height: 38
-
-                    source: "qrc:/icons/next.png"
-
-                    fillMode: Image.PreserveAspectFit
-                    smooth: true
-                }
-            }
-        }
-    }
-
-    // =========================================================
-    //  PROGRESS SLIDER
-    // =========================================================
-
-    Connections {
-
-        target: mediaPlayer
-
-        function onPositionChanged() {
-
-            if (!progressSlider.pressed) {
-
-                progressSlider.value =
-                    mediaPlayer.position
             }
         }
     }

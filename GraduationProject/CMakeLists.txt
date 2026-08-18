@@ -33,6 +33,7 @@ qt_add_qml_module(appMediaPlayerIVI
          SOURCES radiostationmodel.h radiostationmodel.cpp
          SOURCES mediabackend.h mediabackend.cpp
          QML_FILES MediaButton.qml
+         SOURCES usbbackend.h usbbackend.cpp
 
 )
 
@@ -59,5 +60,4 @@ install(TARGETS appMediaPlayerIVI
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
-
 

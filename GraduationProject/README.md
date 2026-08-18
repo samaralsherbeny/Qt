@@ -861,17 +861,3 @@ Bluetooth Interface
 ```
 
 ---
-
-# Repository
-
-GitHub repository:
-
-https://github.com/samaralsherbeny/Qt/tree/main/GraduationProject
-
----
-
-# Author
-
-**Samar Alsherbeny**
-
-Qt / C++ Graduation Project

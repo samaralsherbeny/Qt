@@ -4,6 +4,7 @@
 
 #include "radiostationmodel.h"
 #include "mediabackend.h"
+#include "usbbackend.h"
 
 int main(int argc, char *argv[])
 {
@@ -31,6 +32,17 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty(
         "mediaBackend",
         &mediaBackend
+        );
+
+    // =====================================================
+    // USB BACKEND
+    // =====================================================
+
+    usbbackend usbBackend;
+
+    engine.rootContext()->setContextProperty(
+        "usbBackend",
+        &usbBackend
         );
 
     // =====================================================
